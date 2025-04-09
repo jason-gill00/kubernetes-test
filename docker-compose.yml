@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  app:
+    # Tells docker compose to build an image using the DockerFile in the current directory
+    # equivalent to running `docker build -t <image> .`
+    build: . 
+    # Maps container port 3000 to host port 3000
+    # So when you visit http://localhost:3000, it will be served by the container
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev

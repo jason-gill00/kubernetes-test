@@ -1,0 +1,22 @@
+# This file tells kubernetes how to deploy the application. And how to manage the pods
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-project-deployment
+  labels:
+    app: test-project 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-project 
+  template:
+    metadata:
+      labels:
+        app: test-project 
+    spec:
+      containers:
+      - name: nodeserver 
+        image: jasongill00/test-project:latest
+        ports:
+        - containerPort: 3000
