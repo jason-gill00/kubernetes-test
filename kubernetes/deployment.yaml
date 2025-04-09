@@ -1,5 +1,5 @@
 # This file tells kubernetes how to deploy the application. And how to manage the pods
-apiVersion: 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-project-deployment
