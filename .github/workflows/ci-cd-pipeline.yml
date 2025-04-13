@@ -8,6 +8,8 @@ on:
 env:
   IMAGE_NAME: jasongill00/test-project
   IMAGE_TAG: ${{ github.sha }}
+  TEMPORAL_WORKER_IMAGE_NAME: jasongill00/temporal-worker
+  TEMPORAL_WORKER_IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   deploy:
@@ -26,17 +28,25 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push Docker image
+    - name: Build and push api-server Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
         tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          
 
+    - name: Build and push temoral Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ env.TEMPORAL_WORKER_IMAGE_NAME }}:${{ env.TEMPORAL_WORKER_IMAGE_TAG }}
 
     - name: Update image tag in deployment.yaml
       run: |
         sed -i "s|image: $IMAGE_NAME.*|image: $IMAGE_NAME:$IMAGE_TAG|" ./kubernetes/deployment.yaml
+        sed -i "s|image: $TEMPORAL_WORKER_IMAGE_NAME.*|image: $TEMPORAL_WORKER_IMAGE_NAME:$TEMPORAL_WORKER_IMAGE_TAG|" ./kubernetes/temporal-worker-deployment.yaml
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -58,4 +68,5 @@ jobs:
       run: |
         kubectl apply -f ./kubernetes/deployment.yaml
         kubectl apply -f ./kubernetes/service.yaml
+        kubectl apply -f ./kubernetes/temporal-worker.yaml
 
