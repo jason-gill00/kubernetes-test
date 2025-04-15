@@ -3,6 +3,11 @@ import * as activities from './activities';
 import * as fs from 'fs';
 
 const run = async () => {
+  console.log("RUNNING WORKER")
+  console.log({
+    address: process.env.TEMPORAL_CLOUD_ADDRESS,
+    apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
+  })
   const connection = process.env.NODE_ENV === 'production' ?
     {
       connection: await NativeConnection.connect({
@@ -32,6 +37,8 @@ const run = async () => {
 
   const entityWorkerRunPromise = entityWorker.run();
   const productWorkerRunPromise = productWorker.run();
+
+  console.log('Workers started');
 
   await Promise.all([entityWorkerRunPromise, productWorkerRunPromise]);
 }
