@@ -29,6 +29,13 @@ app.get('/temporal', async (_req, res) => {
       }
     } : {}
 
+  console.log("inside temporal endpoint")
+  console.log({
+    clientKey: fs.readFileSync('/creds/client.key'),
+    namespace: process.env.TEMPORAL_CLOUD_NAMESPACE,
+    address: process.env.TEMPORAL_CLOUD_ADDRESS,
+  })
+
   const client = new Client({
     namespace: 'default',
     ...connection,
