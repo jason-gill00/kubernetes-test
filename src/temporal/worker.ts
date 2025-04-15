@@ -1,11 +1,24 @@
-import { Worker } from '@temporalio/worker';
+import { NativeConnection, Worker } from '@temporalio/worker';
 import * as activities from './activities';
+import * as fs from 'fs';
 
 const run = async () => {
+  const connection = process.env.NODE_ENV === 'production' ?
+    {
+      connection: await NativeConnection.connect({
+        address: process.env.TEMPORAL_CLOUD_ADDRESS,
+      }),
+      tls: {
+        clientKey: fs.readFileSync('/creds/client.key'),
+      }
+    } : {}
+
   const entityWorker = await Worker.create({
     workflowsPath: require.resolve('./workflows'),
     activities,
+    namespace: 'test-playground',
     taskQueue: 'entity-queue',
+    ...connection,
   });
 
 
@@ -15,6 +28,7 @@ const run = async () => {
     workflowsPath: require.resolve('./workflows'),
     activities,
     taskQueue: `product-queue-${version}`,
+    ...connection,
   });
 
 

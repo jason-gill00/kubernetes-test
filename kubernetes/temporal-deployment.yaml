@@ -20,3 +20,17 @@ spec:
           env:
             - name: VERSION
               value: "{{ YOUR_TAG }}"
+            - name: NODE_ENV
+              value: production
+            - name: TEMPORAL_CLOUD_ADDRESS
+              value: us-east-1.aws.api.temporal.io:7233
+            - name: TEMPORAL_NAMESPACE
+              value: test-playground
+          volumeMounts:
+            - name: temporal-creds
+              mountPath: /creds
+              readOnly: true
+      volumes:
+        - name: temporal-creds
+          secret:
+            secretName: temporal-credentials

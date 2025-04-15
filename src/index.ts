@@ -1,6 +1,7 @@
 import { Client, Connection } from '@temporalio/client';
 import { uuid4 } from '@temporalio/workflow';
 import express from 'express';
+import * as fs from 'fs';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,10 +18,20 @@ app.get('/version', (_req, res) => {
 });
 
 app.get('/temporal', async (_req, res) => {
-  const connection = await Connection.connect();
+  const connection = process.env.NODE_ENV === 'production' ?
+    {
+      namespace: process.env.TEMPORAL_CLOUD_NAMESPACE,
+      connection: await Connection.connect({
+        address: process.env.TEMPORAL_CLOUD_ADDRESS,
+      }),
+      tls: {
+        clientKey: fs.readFileSync('/creds/client.key'),
+      }
+    } : {}
+
   const client = new Client({
-    connection,
     namespace: 'default',
+    ...connection,
   });
   const workflowId = 'entity-workflow-id';
 

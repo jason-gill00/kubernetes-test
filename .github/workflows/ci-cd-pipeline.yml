@@ -10,6 +10,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
   TEMPORAL_WORKER_IMAGE_NAME: jasongill00/temporal-worker
   TEMPORAL_WORKER_IMAGE_TAG: ${{ github.sha }}
+  TEMPORAL_CLIENT_KEY: ${{ secrets.TEMPORAL_CLIENT_KEY }}
 
 jobs:
   deploy:
@@ -63,6 +64,12 @@ jobs:
     - name: Update kubeconfig for EKS
       run: |
         aws eks update-kubeconfig --region us-east-1 --name my-cluster 
+
+    - name: Create temporal TLS secret in Kubernetes
+      run: |
+        kubectl delete secret temporal-credentials --ignore-not-found
+        kubectl create secret generic temporal-credentials \
+          --from-literal=client.key="${{ secrets.TEMPORAL_CLIENT_KEY }}" \
 
     - name: Deploy to Kubernetes
       run: |
