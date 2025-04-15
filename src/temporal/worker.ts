@@ -8,9 +8,11 @@ const run = async () => {
       connection: await NativeConnection.connect({
         address: process.env.TEMPORAL_CLOUD_ADDRESS,
       }),
-      tls: {
-        clientKey: fs.readFileSync('/creds/client.key'),
-      }
+      credentials: {
+        headers: {
+          authorization: `Bearer ${process.env.TEMPORAL_CLOUD_API_KEY}`,
+        },
+      },
     } : {}
 
   const entityWorker = await Worker.create({

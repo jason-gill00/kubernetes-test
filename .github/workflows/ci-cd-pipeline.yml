@@ -65,11 +65,11 @@ jobs:
       run: |
         aws eks update-kubeconfig --region us-east-1 --name my-cluster 
 
-    - name: Create temporal TLS secret in Kubernetes
+    - name: Create Kubernetes secret for Temporal API key
       run: |
-        kubectl delete secret temporal-credentials --ignore-not-found
-        kubectl create secret generic temporal-credentials \
-          --from-literal=client.key="${{ secrets.TEMPORAL_CLIENT_KEY }}" \
+        kubectl delete secret temporal-api-key --ignore-not-found
+        kubectl create secret generic temporal-api-key \
+          --from-literal=TEMPORAL_CLOUD_API_KEY=${{ secrets.TEMPORAL_CLIENT_KEY }}
 
     - name: Deploy to Kubernetes
       run: |

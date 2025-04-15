@@ -29,6 +29,11 @@ spec:
               value: us-east-1.aws.api.temporal.io:7233
             - name: TEMPORAL_CLOUD_NAMESPACE
               value: test-playground
+            - name: TEMPORAL_CLOUD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: temporal-api-key
+                  key: TEMPORAL_CLOUD_API_KEY
           volumeMounts:
             - name: temporal-creds
               mountPath: /creds

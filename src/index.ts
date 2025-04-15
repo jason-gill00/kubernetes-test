@@ -21,7 +21,7 @@ app.get('/temporal', async (_req, res) => {
 
   console.log("inside temporal endpoint")
   console.log({
-    clientKey: fs.readFileSync('/creds/client.key'),
+    authorization: `Bearer ${process.env.TEMPORAL_CLOUD_API_KEY}`,
     namespace: process.env.TEMPORAL_CLOUD_NAMESPACE,
     address: process.env.TEMPORAL_CLOUD_ADDRESS,
   })
@@ -31,13 +31,14 @@ app.get('/temporal', async (_req, res) => {
       connection: await Connection.connect({
         address: process.env.TEMPORAL_CLOUD_ADDRESS,
       }),
-      tls: {
-        clientKey: fs.readFileSync('/creds/client.key'),
-      }
+      credentials: {
+        headers: {
+          authorization: `Bearer ${process.env.TEMPORAL_CLOUD_API_KEY}`,
+        },
+      },
     } : {}
 
   console.log({
-    clientKey: fs.readFileSync('/creds/client.key'),
     namespace: process.env.TEMPORAL_CLOUD_NAMESPACE,
     address: process.env.TEMPORAL_CLOUD_ADDRESS,
   })
