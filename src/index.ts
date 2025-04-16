@@ -27,7 +27,7 @@ app.get('/temporal', async (_req, res) => {
   })
   const connection = process.env.NODE_ENV === 'production' ?
     {
-      namespace: process.env.TEMPORAL_CLOUD_NAMESPACE,
+      namespace: 'test-playground.muu9r',
       connection: await Connection.connect({
         address: process.env.TEMPORAL_CLOUD_ADDRESS,
         tls: {},
@@ -41,7 +41,7 @@ app.get('/temporal', async (_req, res) => {
   })
 
   const client = new Client({
-    namespace: process.env.TEMPORAL_CLOUD_NAMESPACE || 'default',
+    namespace: 'test-playground.muu9r',
     ...connection,
   });
   const workflowId = 'entity-workflow-id';
