@@ -22,7 +22,7 @@ export const entityWorkflow = async () => {
   console.log('Running entity workflow');
   const pendingSignals: WorkflowSignal[] = [];
 
-  setHandler(entitySignal, async (signal: WorkflowSignal) => {
+  setHandler('entity', async (signal: WorkflowSignal) => {
     console.log('Received signal:', signal);
     pendingSignals.push(signal);
   })

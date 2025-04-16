@@ -1,4 +1,4 @@
-import { Client, Connection } from '@temporalio/client';
+import { Client, Connection, WorkflowIdReusePolicy } from '@temporalio/client';
 import { uuid4 } from '@temporalio/workflow';
 import express from 'express';
 import * as fs from 'fs';
@@ -59,9 +59,10 @@ app.get('/temporal', async (_req, res) => {
       workflowId,
       taskQueue: 'entity-queue',
       signal: 'entity',
+      workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE, // 👈 this line
       signalArgs: [{
         name: 'test-name',
-        jobId: uuid4(),
+        jobId: 'foo-bar',
         data: {
           foo: 'bar',
         },
