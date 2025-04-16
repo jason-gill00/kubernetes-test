@@ -40,7 +40,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./worker.dockerfile   # ← THIS IS IMPORTANT
+        file: ./temporal/dockerfile   # ← THIS IS IMPORTANT
         push: true
         tags: ${{ env.TEMPORAL_WORKER_IMAGE_NAME }}:${{ env.TEMPORAL_WORKER_IMAGE_TAG }}
           
