@@ -29,9 +29,11 @@ const run = async () => {
 
   const version = process.env.VERSION || 'unknown';
 
+  console.log("VERSION: ", version)
   const productWorker = await Worker.create({
     workflowsPath: require.resolve('./workflows'),
     activities,
+    namespace: 'test-playground',
     taskQueue: `product-queue-${version}`,
     ...connection,
   });
