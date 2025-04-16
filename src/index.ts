@@ -44,7 +44,7 @@ app.get('/temporal', async (_req, res) => {
     namespace: 'test-playground.muu9r',
     ...connection,
   });
-  const workflowId = 'entity-workflow-id';
+  const workflowId = 'entity-workflow-id-123';
 
   //await client.workflow.start('testWorkflow', {
   //  workflowId,
@@ -52,23 +52,27 @@ app.get('/temporal', async (_req, res) => {
   //  taskQueue: 'test-queue',
   //})
 
+  await client.workflow.start('entityWorkflow', {
+    workflowId,
+    taskQueue: 'entity-queue',
+    args: [],
+  })
 
-  await client.workflow.signalWithStart(
-    'entityWorkflow',
-    {
-      workflowId,
-      taskQueue: 'entity-queue',
-      signal: 'entity',
-      workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE, // 👈 this line
-      signalArgs: [{
-        name: 'test-name',
-        jobId: 'foo-bar',
-        data: {
-          foo: 'bar',
-        },
-      }],
-    }
-  )
+  //await client.workflow.signalWithStart(
+  //  'entityWorkflow',
+  //  {
+  //    workflowId,
+  //    taskQueue: 'entity-queue',
+  //    signal: 'entity',
+  //    signalArgs: [{
+  //      name: 'test-name',
+  //      jobId: 'foo-bar',
+  //      data: {
+  //        foo: 'bar',
+  //      },
+  //    }],
+  //  }
+  //)
 
   res.send('Made a request to temporal');
 });
