@@ -41,7 +41,7 @@ app.get('/temporal', async (_req, res) => {
   })
 
   const client = new Client({
-    namespace: 'default',
+    namespace: process.env.TEMPORAL_CLOUD_NAMESPACE || 'default',
     ...connection,
   });
   const workflowId = 'entity-workflow-id';

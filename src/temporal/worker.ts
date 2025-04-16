@@ -11,23 +11,23 @@ const run = async () => {
   //  address: process.env.TEMPORAL_CLOUD_ADDRESS,
   //  apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
   //})
-  //const connection = process.env.NODE_ENV === 'production' ?
-  //  {
-  //    connection: await NativeConnection.connect({
-  //      address: process.env.TEMPORAL_CLOUD_ADDRESS,
-  //      tls: {},
-  //      apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
-  //    }),
-  //  } : {}
-  //
-  //const entityWorker = await Worker.create({
-  //  workflowsPath: require.resolve('./workflows'),
-  //  activities,
-  //  namespace: 'test-playground',
-  //  taskQueue: 'entity-queue',
-  //  ...connection,
-  //});
-  //
+  const connection = process.env.NODE_ENV === 'production' ?
+    {
+      connection: await NativeConnection.connect({
+        address: process.env.TEMPORAL_CLOUD_ADDRESS,
+        tls: {},
+        apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
+      }),
+    } : {}
+
+  const entityWorker = await Worker.create({
+    workflowsPath: require.resolve('./workflows'),
+    activities,
+    namespace: 'test-playground',
+    taskQueue: 'entity-queue',
+    ...connection,
+  });
+
   //
   //const version = process.env.VERSION || 'unknown';
   //

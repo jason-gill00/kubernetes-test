@@ -1,26 +1,25 @@
 # Dockerfile for Temporal worker
+# Use a glibc-compatible base image
+FROM node:20-slim
 
-FROM node:20-alpine
+# Install required system packages (including CA certs)
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
-# Install CA certificates for TLS
-RUN apk add --no-cache ca-certificates
-
-# Create app directory
+# Set working directory
 WORKDIR /app
 
 # Install app dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy app source
+# Copy the rest of the source code
 COPY . .
 
-# Build app
+# Build the project
 RUN npm run build
 
-
-# CMD ["sleep", "3600"]
-
-# Start worker
+# Start the Temporal worker
 CMD ["node", "dist/temporal/worker.js"]
 
