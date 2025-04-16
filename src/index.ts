@@ -40,7 +40,7 @@ app.get('/temporal', async (_req, res) => {
 
 
   await client.workflow.signalWithStart(
-    'entityWorkflow',
+    'entityWorkflow123',
     {
       workflowId,
       taskQueue: 'entity-queue',
