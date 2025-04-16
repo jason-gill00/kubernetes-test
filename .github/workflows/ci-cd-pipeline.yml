@@ -45,12 +45,12 @@ jobs:
         tags: ${{ env.TEMPORAL_WORKER_IMAGE_NAME }}:${{ env.TEMPORAL_WORKER_IMAGE_TAG }}
           
 
-    - name: Build and push temoral Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ${{ env.TEMPORAL_WORKER_IMAGE_NAME }}:${{ env.TEMPORAL_WORKER_IMAGE_TAG }}
+    # - name: Build and push temoral Docker image
+    #   uses: docker/build-push-action@v5
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: ${{ env.TEMPORAL_WORKER_IMAGE_NAME }}:${{ env.TEMPORAL_WORKER_IMAGE_TAG }}
 
     - name: Update image tag in deployment.yaml
       run: |
