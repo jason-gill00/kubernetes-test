@@ -21,7 +21,7 @@ const run = async () => {
   const entityWorker = await Worker.create({
     workflowsPath: require.resolve('./workflows'),
     activities,
-    namespace: 'test-playground',
+    namespace: 'test-playground.muu9r',
     taskQueue: 'entity-queue',
     ...connection,
   });
@@ -33,7 +33,7 @@ const run = async () => {
   const productWorker = await Worker.create({
     workflowsPath: require.resolve('./workflows'),
     activities,
-    namespace: 'test-playground',
+    namespace: 'test-playground.muu9r',
     taskQueue: `product-queue-${version}`,
     ...connection,
   });
