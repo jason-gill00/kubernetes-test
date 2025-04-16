@@ -22,7 +22,7 @@ app.get('/temporal', async (_req, res) => {
   console.log("inside temporal endpoint")
   const connection = process.env.NODE_ENV === 'production' ?
     {
-      namespace: 'test-playground',
+      namespace: 'test-playground.muu9r',
       connection: await Connection.connect({
         address: process.env.TEMPORAL_CLOUD_ADDRESS,
         tls: {},
