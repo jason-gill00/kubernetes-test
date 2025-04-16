@@ -12,6 +12,7 @@ const run = async () => {
     {
       connection: await NativeConnection.connect({
         address: process.env.TEMPORAL_CLOUD_ADDRESS,
+        tls: {},
         apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
       }),
     } : {}
