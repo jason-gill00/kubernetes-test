@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
 
@@ -9,6 +9,5 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
-
 CMD ["node", "dist/temporal/worker.js"]
+
