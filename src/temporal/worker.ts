@@ -4,6 +4,9 @@ import * as fs from 'fs';
 
 const run = async () => {
   console.log("RUNNING WORKER")
+  // set timeout to an hour
+  const timeout = 60 * 60 * 1000;
+  await new Promise((resolve) => setTimeout(resolve, timeout));
   //console.log({
   //  address: process.env.TEMPORAL_CLOUD_ADDRESS,
   //  apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
