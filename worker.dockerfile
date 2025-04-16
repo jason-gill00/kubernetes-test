@@ -18,6 +18,9 @@ COPY . .
 # Build app
 RUN npm run build
 
+
+CMD ["sleep", "3600"]
+
 # Start worker
 CMD ["node", "dist/temporal/worker.js"]
 
