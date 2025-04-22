@@ -3,7 +3,9 @@ import {
   setHandler,
   defineSignal,
   startChild,
-  proxyActivities
+  proxyActivities,
+  patched,
+  deprecatePatch
 } from '@temporalio/workflow';
 
 
@@ -18,7 +20,31 @@ const entitySignal = defineSignal<[WorkflowSignal]>(
   'entity'
 );
 
+const patchId = 'wait-for-healthy-worker-v1'
+
+
+async function waitForAvailableWorker(getApiVersion: () => Promise<string>): Promise<string> {
+  while (true) {
+    const version = await getApiVersion();
+    const taskQueue = `product-queue-${version}`;
+
+    const { pingActivity } = proxyActivities<{ pingActivity(): Promise<void> }>({
+      startToCloseTimeout: '3s',
+      taskQueue,
+    });
+
+    try {
+      await pingActivity();
+      return version; // ✅ Found a healthy worker for this version
+    } catch {
+      console.log(`No worker active for ${taskQueue}. Retrying...`);
+      await sleep(1000); // wait and retry
+    }
+  }
+}
+
 export const entityWorkflow = async () => {
+  // try {
   console.log('Running entity workflow');
   const pendingSignals: WorkflowSignal[] = [];
 
@@ -27,8 +53,12 @@ export const entityWorkflow = async () => {
     pendingSignals.push(signal);
   })
 
+  //if (patched('test-1')) {
+  //  console.log("IN NEW FLOW: test-1")
+  //}
+
   while (true) {
-    console.log('Waiting for signal');
+    console.log('Waiting for signal v2');
     const nextSignal = pendingSignals.shift()
     if (!nextSignal) break;
 
@@ -36,7 +66,21 @@ export const entityWorkflow = async () => {
     const { getApiVersion } = proxyActivities({
       startToCloseTimeout: '1 minute',
     });
-    const version = await getApiVersion();
+
+    let version: string;
+
+    // console.log(patched(patchId))
+
+    // deprecatePatch(patchId)
+
+    if (patched(patchId)) {
+     console.log("IN NEW FLOW ")
+    version = await waitForAvailableWorker(getApiVersion);
+    } else {
+    version = await getApiVersion();
+    }
+    const productQueue = `product-queue-${version}`;
+
 
     // Start child workflow
     const handle = await startChild('job', {
@@ -47,13 +91,17 @@ export const entityWorkflow = async () => {
           data: nextSignal.data,
         }
       ],
-      taskQueue: `product-queue-${version}`,
+      taskQueue: productQueue,
       workflowId: `job-${nextSignal.jobId}`,
     })
     await handle.result();
 
     await sleep(1000);
   }
+
+// } catch(err) {
+//     console.error('Error in entity workflow:', err);
+//   }
 
   return 'Entity workflow completed';
 }

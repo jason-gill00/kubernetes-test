@@ -33,14 +33,13 @@ app.get('/temporal', async (_req, res) => {
   console.log(connection)
 
   const client = new Client({
-    namespace: 'test-playground.muu9r',
     ...connection,
   });
   const workflowId = 'entity-workflow-id-123';
 
 
   await client.workflow.signalWithStart(
-    'entityWorkflow123',
+    'entityWorkflow',
     {
       workflowId,
       taskQueue: 'entity-queue',
@@ -48,6 +47,46 @@ app.get('/temporal', async (_req, res) => {
       signalArgs: [{
         name: 'test-name',
         jobId: 'foo-bar',
+        data: {
+          foo: 'bar',
+        },
+      }],
+    }
+  )
+
+  res.send('Made a request to temporal');
+});
+
+app.get('/temporal-2', async (_req, res) => {
+
+  console.log("inside temporal endpoint")
+  const connection = process.env.NODE_ENV === 'production' ?
+    {
+      namespace: 'test-playground.muu9r',
+      connection: await Connection.connect({
+        address: process.env.TEMPORAL_CLOUD_ADDRESS,
+        tls: {},
+        apiKey: process.env.TEMPORAL_CLOUD_API_KEY,
+      }),
+    } : {}
+
+  console.log(connection)
+
+  const client = new Client({
+    ...connection,
+  });
+  const workflowId = 'entity-workflow-id-456';
+
+
+  await client.workflow.signalWithStart(
+    'entityWorkflow',
+    {
+      workflowId,
+      taskQueue: 'entity-queue',
+      signal: 'entity',
+      signalArgs: [{
+        name: 'test-nameworkflow2',
+        jobId: 'foo-bar-workflow-2',
         data: {
           foo: 'bar',
         },
